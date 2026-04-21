@@ -1,9 +1,9 @@
-import React, { useEffect, useState, useRef } from 'react';
-import { useGame } from './GameContext';
+import confetti from 'canvas-confetti';
+import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AnswerBox from './AnswerBox';
 import { playBellSound, playBuzzerSound } from './audio';
-import confetti from 'canvas-confetti';
+import { useGame } from './GameContext';
 
 const Board = () => {
   const { gameData, setGameData } = useGame();
@@ -267,7 +267,8 @@ const xStyle: React.CSSProperties = {
   fontWeight: '900',
   fontFamily: 'sans-serif',
   lineHeight: 1,
-  textShadow: '3px 3px 6px rgba(0,0,0,0.9), -2px -2px 0 #fff, 2px -2px 0 #fff, -2px 2px 0 #fff, 2px 2px 0 #fff'
+  WebkitTextStroke: '2px #FFFFFF',
+  textShadow: '3px 3px 6px rgba(0,0,0,0.9)'
 };
 
 const gameAreaStyle: React.CSSProperties = {
