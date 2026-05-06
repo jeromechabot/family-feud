@@ -1,7 +1,6 @@
-import React from 'react';
 import { motion } from 'framer-motion';
+import React from 'react';
 import type { Answer } from './types';
-import { playBellSound } from './audio';
 
 interface AnswerBoxProps {
   answer: Answer | null;
