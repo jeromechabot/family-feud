@@ -1,6 +1,7 @@
 import { Routes, Route, Link } from 'react-router-dom';
 import Creator from './Creator';
 import Board from './Board';
+import QuestionSelector from './QuestionSelector';
 
 function App() {
   return (
@@ -31,14 +32,16 @@ function App() {
           La guerre des clans
         </div>
         <div style={{ display: 'flex', gap: '1rem' }}>
-          <Link to="/" style={linkStyle}>Configuration</Link>
+          <Link to="/" style={linkStyle}>Sélection</Link>
+          <Link to="/create" style={linkStyle}>Configuration</Link>
           <Link to="/play" style={linkStyle}>Jouer</Link>
         </div>
       </nav>
 
       <main style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
         <Routes>
-          <Route path="/" element={<Creator />} />
+          <Route path="/" element={<QuestionSelector />} />
+          <Route path="/create" element={<Creator />} />
           <Route path="/play" element={<Board />} />
         </Routes>
       </main>

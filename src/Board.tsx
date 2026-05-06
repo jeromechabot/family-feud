@@ -6,7 +6,7 @@ import { playBellSound, playBuzzerSound } from './audio';
 import { useGame } from './GameContext';
 
 const Board = () => {
-  const { gameData, setGameData } = useGame();
+  const { gameData, setGameData, allQuestions, currentQuestionNum, goToQuestion, totalQuestions } = useGame();
   const navigate = useNavigate();
   
   const [isFullscreen, setIsFullscreen] = useState(false);
@@ -41,7 +41,7 @@ const Board = () => {
           playBellSound();
           setGameData({
             ...gameData,
-            answers: gameData.answers.map(a => 
+            answers: gameData.answers.map(a =>
               a.id === ans.id ? { ...a, revealed: true } : a
             )
           });
@@ -56,11 +56,33 @@ const Board = () => {
           if (prev < 3) playBuzzerSound();
           return prev === 3 ? 0 : prev + 1;
         });
+      } else if (e.key === 'n' || e.key === 'N') {
+        const next = currentQuestionNum + 1;
+        if (next > totalQuestions) return;
+        goToQuestion(next);
+        const answers = allQuestions[next];
+        if (answers) {
+          setGameData({ question: `Question ${next}`, answers: answers.map(a => ({ ...a, revealed: false })) });
+          setLeftStrikes(0);
+          setRightStrikes(0);
+          hasCelebrated.current = false;
+        }
+      } else if (e.key === 'p' || e.key === 'P') {
+        const prev = currentQuestionNum - 1;
+        if (prev < 1) return;
+        goToQuestion(prev);
+        const answers = allQuestions[prev];
+        if (answers) {
+          setGameData({ question: `Question ${prev}`, answers: answers.map(a => ({ ...a, revealed: false })) });
+          setLeftStrikes(0);
+          setRightStrikes(0);
+          hasCelebrated.current = false;
+        }
       }
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [gameData, setGameData]);
+  }, [gameData, setGameData, allQuestions, currentQuestionNum, goToQuestion, totalQuestions]);
 
   useEffect(() => {
     if (gameData && gameData.answers.length > 0) {
@@ -176,6 +198,11 @@ const Board = () => {
       </div>
 
       <div style={gameAreaStyle}>
+        {/* Question label */}
+        <div style={questionLabelStyle}>
+          QUESTION {currentQuestionNum}
+        </div>
+
         {/* Total Points */}
         <div style={totalOvalStyle}>
           {totalPoints}
@@ -295,7 +322,18 @@ const totalOvalStyle: React.CSSProperties = {
   color: '#e5e5e5',
   boxShadow: '0 15px 30px rgba(0,0,0,0.8), inset 0 0 20px rgba(0,0,0,0.8)',
   position: 'relative',
-  marginBottom: '4rem'
+  marginBottom: '2rem'
+};
+
+const questionLabelStyle: React.CSSProperties = {
+  fontSize: '1rem',
+  fontWeight: 900,
+  letterSpacing: '6px',
+  color: '#e5b253',
+  textTransform: 'uppercase',
+  fontFamily: 'sans-serif',
+  marginBottom: '0.75rem',
+  opacity: 0.9,
 };
 
 const gridStyle: React.CSSProperties = {

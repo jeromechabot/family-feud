@@ -9,3 +9,5 @@ export interface QuestionData {
   question: string;
   answers: Answer[];
 }
+
+export type AllQuestions = Record<number, Answer[]>;

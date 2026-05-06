@@ -1,22 +1,34 @@
 import { createContext, useContext, useState } from 'react';
 import type { ReactNode } from 'react';
-import type { QuestionData } from './types';
+import type { AllQuestions, QuestionData } from './types';
+import { allQuestionsData } from './parseQuestions';
+
+const TOTAL_QUESTIONS = 10;
 
 interface GameContextType {
   gameData: QuestionData | null;
   setGameData: (data: QuestionData | null) => void;
+  allQuestions: AllQuestions;
+  currentQuestionNum: number;
+  goToQuestion: (num: number) => void;
+  totalQuestions: number;
 }
 
 const GameContext = createContext<GameContextType | undefined>(undefined);
 
 export const GameProvider = ({ children }: { children: ReactNode }) => {
-  const [gameData, setGameData] = useState<QuestionData | null>(() => {
+  // CSV is parsed at module load time — no async needed
+  const [allQuestions] = useState<AllQuestions>(allQuestionsData);
+  const [currentQuestionNum, setCurrentQuestionNum] = useState(1);
+
+  // gameData holds the active question being played on the Board
+  const [gameData, setGameDataState] = useState<QuestionData | null>(() => {
     const saved = localStorage.getItem('familyFeudData');
     return saved ? JSON.parse(saved) : null;
   });
 
   const handleSetGameData = (data: QuestionData | null) => {
-    setGameData(data);
+    setGameDataState(data);
     if (data) {
       localStorage.setItem('familyFeudData', JSON.stringify(data));
     } else {
@@ -24,8 +36,23 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
+  /** Navigate to a question number (1-based), with boundary validation */
+  const goToQuestion = (num: number) => {
+    if (num < 1 || num > TOTAL_QUESTIONS) return;
+    setCurrentQuestionNum(num);
+  };
+
   return (
-    <GameContext.Provider value={{ gameData, setGameData: handleSetGameData }}>
+    <GameContext.Provider
+      value={{
+        gameData,
+        setGameData: handleSetGameData,
+        allQuestions,
+        currentQuestionNum,
+        goToQuestion,
+        totalQuestions: TOTAL_QUESTIONS,
+      }}
+    >
       {children}
     </GameContext.Provider>
   );
