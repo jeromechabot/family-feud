@@ -1,6 +1,7 @@
 import { Routes, Route, Link } from 'react-router-dom';
 import Creator from './Creator';
 import Board from './Board';
+import LightningBoard from './LightningBoard';
 import QuestionSelector from './QuestionSelector';
 
 function App() {
@@ -35,6 +36,7 @@ function App() {
           <Link to="/" style={linkStyle}>Sélection</Link>
           <Link to="/create" style={linkStyle}>Configuration</Link>
           <Link to="/play" style={linkStyle}>Jouer</Link>
+          <Link to="/lightning" style={{ ...linkStyle, background: 'linear-gradient(135deg, #7b2a0e 0%, #5a1a08 100%)', color: '#e5b253' }}>⚡ Éclair</Link>
         </div>
       </nav>
 
@@ -43,6 +45,7 @@ function App() {
           <Route path="/" element={<QuestionSelector />} />
           <Route path="/create" element={<Creator />} />
           <Route path="/play" element={<Board />} />
+          <Route path="/lightning" element={<LightningBoard />} />
         </Routes>
       </main>
     </div>

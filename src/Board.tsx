@@ -78,6 +78,8 @@ const Board = () => {
           setRightStrikes(0);
           hasCelebrated.current = false;
         }
+      } else if (e.key === 'e' || e.key === 'E') {
+        navigate('/lightning');
       }
     };
     window.addEventListener('keydown', handleKeyDown);
